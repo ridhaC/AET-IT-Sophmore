@@ -7,9 +7,9 @@
 
     public class Hangman extends JPanel {
    
-      int incorrectGuesses=0;
-      String answerString;
-      String currString="";
+      int errorCount=0;
+      String answer;
+      String currentState="";
      
       final int TOP_PERCENT = 10;
       final int HEAD_PERCENT = 15;
@@ -20,21 +20,39 @@
      
        public Hangman(String str)
       {
-       
+	    	answer = str;
+	   		errorCount = 0;
+	   		for(int i = 0; i<answer.length(); i++)	{
+	   			currentState += " _ ";
+	   		}
       }
      
        public String getString()
       {
-         return "to do!";
+         return currentState;
       }
        public void reset(String str)
       {
+    	   currentState = "";
+    	   answer = str;
+	   		for(int i = 0; i<answer.length(); i++)	{
+	   			currentState += " _ ";
+	   		}
+    	   
       }
-       public boolean tryCharacter(char ch)
+       public boolean tryCharacter(char letter)
       {
-         incorrectGuesses++;
+   		boolean retur = false;
+   		for(int i = 0; i < answer.length(); i++)	{
+   			if (answer.charAt(i) == letter)	{
+   				currentState = currentState.substring(0, i) + letter + currentState.substring(i+3);
+   				retur = true;
+   			}
+    	}
+   		if(retur == false)
+   			errorCount++;
          repaint();
-         return false;
+         return retur;
       }
    
    /*
@@ -104,22 +122,22 @@
          g.fillRect(0,0,width, height);
         
          g.setColor(Color.red);
-         if (incorrectGuesses > 0)
+         if (errorCount > 0)
             drawFace(g, width/2);
         
-         if (incorrectGuesses > 1)
+         if (errorCount > 1)
             drawTorso(g, width/2);
         
-         if (incorrectGuesses > 2)
+         if (errorCount > 2)
             drawRightArm(g, width/2);
         
-         if (incorrectGuesses > 3)
+         if (errorCount > 3)
             drawLeftArm(g, width/2);
         
-         if (incorrectGuesses > 4)
+         if (errorCount > 4)
             drawRightLeg(g, width/2);
         
-         if (incorrectGuesses > 5)
+         if (errorCount > 5)
             drawLeftLeg(g, width/2);
       }
     
